@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     <script src="js/lib/three.min.js"></script>
     <title>Document</title>
 </head>
@@ -74,18 +75,18 @@
             color_6 = document.getElementById('color-6'),
             color_7 = document.getElementById('color-7'),
             color_8 = document.getElementById('color-8'),
-            color_9 = document.getElementById('color-9');
+            color_9 = document.getElementById('color-9'),
         // Scene settings      
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0xacacac);
 
         // The floor settings
-        var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);
-        var floorMaterial = new THREE.MeshPhongMaterial({
+        let floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);
+        let floorMaterial = new THREE.MeshPhongMaterial({
             color: 0x000000,
             shininess: 0.5
         });
-        var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        let floor = new THREE.Mesh(floorGeometry, floorMaterial);
         floor.rotation.x = -0.5 * Math.PI;
         floor.receiveShadow = true;
         floor.position.y = -1;
@@ -95,35 +96,82 @@
         // Camera settings
         camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,10000);
         camera.rotation.y = 45/180*Math.PI;
-        camera.position.x = 800;
-        camera.position.y = 100;
+        camera.position.x = 600;
+        camera.position.y = 400;
         camera.position.z = 1000;
         // Renderer settings
         renderer = new THREE.WebGLRenderer({antialias:true});
         renderer.setSize(window.innerWidth,window.innerHeight);
         document.body.appendChild(renderer.domElement);
-        
 
-        // light settings
-        light = new THREE.PointLight(0xffffff,3);
-        light.position.set(0,4000,500);
-        scene.add(light);
-        light = new THREE.PointLight(0xc4c4c4,3);
-        light.position.set(300,-500,100);
-        scene.add(light);
-        light2 = new THREE.PointLight(0xc4c4c4,2);
-        light2.position.set(-500,300,500);
+
+        // light settings (Main)
+        light = new THREE.SpotLight(0xfafafa,2);
+        light.position.set(5000,0,0);
+
+        light2 = new THREE.SpotLight(0xfafafa,2);
+        light2.position.set(0,5000,0);
+
+        light3 = new THREE.PointLight(0xfafafa,5);
+        light3.position.set(0,0,5000);
         light.castShadow = true;
-        scene.add(light2);
-        var spotLight = new THREE.SpotLight( 0xffffff );
-            spotLight.position.set( 500, 1000, 500 );
-            spotLight.castShadow = true;
-            spotLight.shadowMapWidth = 100;
-            spotLight.shadowMapHeight = 100;
-            scene.add( spotLight );
+
+        light4 = new THREE.SpotLight(0xfafafa,2);
+        light4.position.set(-5000,0,0);
+
+        light5 = new THREE.SpotLight(0xfafafa,2);
+        light5.position.set(0,-5000,0);
+
+        light6 = new THREE.SpotLight(0xfafafa,2);
+        light6.position.set(0,0,-5000);
+
+            scene.add(light);
+
+            scene.add(light2);
+
+            scene.add(light3);
+
+            scene.add(light4);
+
+            scene.add(light5);
+
+            scene.add(light6);
 
 
 
+        // const sphereSize = 100;
+        // const pointLightHelper1 = new THREE.PointLightHelper( light, sphereSize );
+        // scene.add( pointLightHelper1 );
+        // const pointLightHelper2 = new THREE.PointLightHelper( light2, sphereSize );
+        // scene.add( pointLightHelper2 );
+        // const pointLightHelper3 = new THREE.PointLightHelper( light3, sphereSize );
+        // scene.add( pointLightHelper3 );
+        //
+        // const pointLightHelper4 = new THREE.PointLightHelper( light4, sphereSize );
+        // scene.add( pointLightHelper4 );
+        // const pointLightHelper5 = new THREE.PointLightHelper( light5, sphereSize );
+        // scene.add( pointLightHelper5 );
+        // const pointLightHelper6 = new THREE.PointLightHelper( light6, sphereSize );
+        // scene.add( pointLightHelper6 );
+
+
+        // Extra light settings
+        // light = new THREE.PointLight(0xffffff,3);
+        // light.position.set(0,4000,500);
+        // scene.add(light);
+        // light = new THREE.PointLight(0xc4c4c4,3);
+        // light.position.set(300,-500,100);
+        // scene.add(light);
+        // light2 = new THREE.PointLight(0xc4c4c4,2);
+        // light2.position.set(-500,300,500);
+        // light.castShadow = true;
+        // scene.add(light2);
+        // var spotLight = new THREE.SpotLight( 0xffffff );
+        // spotLight.position.set( 500, 1000, 500 );
+        // spotLight.castShadow = true;
+        // spotLight.shadowMapWidth = 100;
+        // spotLight.shadowMapHeight = 100;
+        // scene.add( spotLight );
         // Loading car's model
         let loader = new THREE.GLTFLoader();
         loader.load('model/scene.gltf', function(gltf){
@@ -134,14 +182,27 @@
 
         });
 
+
+
         // Loading car's color chagible model
         loader.load('model/color.gltf', function(gltf){
             car = gltf.scene.children[0];
             car.scale.set(2,2,2);
             scene.add(gltf.scene);
             animate();
-            window.onload = function(){
-                color = pkw;
+
+
+            function carColor(block, color){
+                block.addEventListener('click', () => {
+                    Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
+                    Model = gltf.scene;
+                    Model.traverse((child, i) => {
+                        if (child.isMesh) {
+                            child.material = Material;
+                            child.material.side = THREE.DoubleSide;
+                        }
+                    });
+                });
             }
             let Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
             let Model = gltf.scene;
@@ -151,114 +212,35 @@
                     child.material.side = THREE.DoubleSide;
                 }
             });
-            color_1.addEventListener('click', () => {
-                color = pkw;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_2.addEventListener('click', () => {
-                color = tw3;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_3.addEventListener('click', () => {
-                color = u5s;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_4.addEventListener('click', () => {
-                color = z5g;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_5.addEventListener('click', () => {
-                color = r2u;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_6.addEventListener('click', () => {
-                color = xb3;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_7.addEventListener('click', () => {
-                color = r5r;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_8.addEventListener('click', () => {
-                color = m8n;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
-                    }
-                });
-            });
-            color_9.addEventListener('click', () => {
-                color = tcm;
-                Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-                Model = gltf.scene;
-                Model.traverse((child, i) => {
-                  if (child.isMesh) {
-                    child.material = Material;
-                    child.material.side = THREE.DoubleSide;
-                  }
-                });
-            });
+            carColor(color_1, pkw);
+            carColor(color_2, tw3);
+            carColor(color_3, u5s);
+            carColor(color_4, z5g);
+            carColor(color_5, r2u);
+            carColor(color_6, xb3);
+            carColor(color_7, r5r);
+            carColor(color_8, m8n);
+            carColor(color_9, tcm);
             scene.add(Model);
         });
 
         // 360 rotating rendering settings
         let controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enablePan = false;
+        controls.enableZoom = true;
+        controls.enableDamping = true;
+        controls.minDistance = 800;
+        controls.maxDistance = 1600;
+        controls.minPolarAngle = 0.8;
+        controls.maxPolarAngle = 1.5;
+        controls.dampingFactor = 0.7;
+        controls.rotateSpeed = 0.7;
+        camera.quaternion.slerp()
         controls.addEventListener('change', renderer);
         function animate() {
             renderer.render(scene,camera);
             requestAnimationFrame(animate);
+
         }
 
 
