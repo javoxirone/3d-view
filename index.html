@@ -173,56 +173,56 @@
         // spotLight.shadowMapHeight = 100;
         // scene.add( spotLight );
         // Loading car's model
-        let loader = new THREE.GLTFLoader();
+        // let loader = new THREE.GLTFLoader();
+        // loader.load('model/scene.gltf', function(gltf){
+        //     car = gltf.scene.children[0];
+        //     car.scale.set(2,2,2);
+        //     scene.add(gltf.scene);
+        //     animate();
+
+        // });
+
+
+
+        // Loading car's color chagible model
         loader.load('model/color.gltf', function(gltf){
             car = gltf.scene.children[0];
             car.scale.set(2,2,2);
             scene.add(gltf.scene);
             animate();
 
+
+            function carColor(block, color){
+                block.addEventListener('click', () => {
+                    Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
+                    Model = gltf.scene;
+                    Model.traverse((child, i) => {
+                        if (child.isMesh) {
+                            child.material = Material;
+                            child.material.side = THREE.DoubleSide;
+                        }
+                    });
+                });
+            }
+            let Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
+            let Model = gltf.scene;
+            Model.traverse((child, i) => {
+                if (child.isMesh) {
+                    child.material = Material;
+                    child.material.side = THREE.DoubleSide;
+                }
+            });
+            carColor(color_1, pkw);
+            carColor(color_2, tw3);
+            carColor(color_3, u5s);
+            carColor(color_4, z5g);
+            carColor(color_5, r2u);
+            carColor(color_6, xb3);
+            carColor(color_7, r5r);
+            carColor(color_8, m8n);
+            carColor(color_9, tcm);
+            scene.add(Model);
         });
-
-
-
-        // // Loading car's color chagible model
-        // loader.load('model/color.gltf', function(gltf){
-        //     car = gltf.scene.children[0];
-        //     car.scale.set(2,2,2);
-        //     scene.add(gltf.scene);
-        //     animate();
-
-
-        //     function carColor(block, color){
-        //         block.addEventListener('click', () => {
-        //             Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-        //             Model = gltf.scene;
-        //             Model.traverse((child, i) => {
-        //                 if (child.isMesh) {
-        //                     child.material = Material;
-        //                     child.material.side = THREE.DoubleSide;
-        //                 }
-        //             });
-        //         });
-        //     }
-        //     let Material = new THREE.MeshStandardMaterial({ color: (color), roughness: 0.2, metalness: 0.8 });
-        //     let Model = gltf.scene;
-        //     Model.traverse((child, i) => {
-        //         if (child.isMesh) {
-        //             child.material = Material;
-        //             child.material.side = THREE.DoubleSide;
-        //         }
-        //     });
-        //     carColor(color_1, pkw);
-        //     carColor(color_2, tw3);
-        //     carColor(color_3, u5s);
-        //     carColor(color_4, z5g);
-        //     carColor(color_5, r2u);
-        //     carColor(color_6, xb3);
-        //     carColor(color_7, r5r);
-        //     carColor(color_8, m8n);
-        //     carColor(color_9, tcm);
-        //     scene.add(Model);
-        // });
 
         // 360 rotating rendering settings
         let controls = new THREE.OrbitControls(camera, renderer.domElement);
